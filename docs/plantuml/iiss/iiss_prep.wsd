@@ -12,6 +12,7 @@ database "I-Score DB" as ISDB
 IS -> IISS: [call] with request
 alt query == P-Rep list (sorted)
 IISS -> IISS: read in memory
+IISS -> SDB : read
 else else
 IISS -> SDB: read
 end

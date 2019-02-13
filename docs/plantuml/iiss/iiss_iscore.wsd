@@ -10,13 +10,13 @@ database "I-Score DB" as ISDB
 
 -> IS: [mq] query
 IS -> IISS: [call] query
-IISS -> RC: [mq] query
+IISS -> RC: [IPC] query
 RC -> ISDB: read I-Score
 opt old I-Score
 RC -> RC: caculate I-Score
 RC -> ISDB: write I-Score
 end
-RC -> IISS: [mq] query response
+RC -> IISS: [IPC] query response
 IISS -> IS: return response
 
 newpage Claim I-Score
@@ -25,7 +25,7 @@ group block invoke
 
 -> IS: [mq] block invoke
 IS -> IISS: [call] with TX
-IISS -> RC: [mq] claim
+IISS -> RC: [IPC] claim
 RC -> ISDB: read I-Score
 opt old I-Score
 RC -> RC: caculate I-Score
@@ -39,13 +39,13 @@ group write_precommit_state, remove_precommit_state
 
 -> IS: [mq] write_precommit_state\nor remove_precommit_state
 IS -> IISS: commit or rollback
-IISS -> RC: [mq] commit or rollback
+IISS -> RC: [IPC] commit or rollback
 alt commit
 RC -> ISDB: set I-Score 0 and \nupdate block height
 else rollback
 RC -> RC: reset memory
 end
-RC -> IISS: [mq] commit or rollback response
+RC -> IISS: [IPC] commit or rollback response
 opt commit
 IISS -> SDB: update ICX
 end

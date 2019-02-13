@@ -31,8 +31,12 @@ IISS -> SDB: update
 IISS -> ID: write TX, block height
 
 opt every N block
+opt get no previous calculation response
+IISS -> IISS: wait calculation response
+end
+
 IISS -> ID: write block height &\nGovernance Variable
-IISS -> RC: [mq] calculation
+IISS -> RC: [IPC] calculation
 end alt every N block
 
 IISS -> IS: return response
@@ -44,9 +48,9 @@ group I-Score calculation
 RC -> ISDB: update I-Score calculated\n in previous cycle
 RC -> ID: read
 RC -> RC: calculate I-Score
-RC -> IISS: [mq] calculation response
+RC -> IISS: [IPC] calculation response
 IISS -> ID: delete
 
-
 end group
+
 @enduml

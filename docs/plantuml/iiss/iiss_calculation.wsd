@@ -11,6 +11,14 @@ database "I-Score DB" as ISDB
 group block invoke
 -> IS: [mq] block_invoke
 IS -> IISS: [call] with TX
+opt I-Score claim
+IISS -> RC: [IPC] claim
+RC -> ISDB: read I-Score
+opt old I-Score
+RC -> RC: caculate I-Score
+end
+RC -> IISS: claim response
+end
 IISS -> IISS: write in memory
 IISS -> IS: return response
 end

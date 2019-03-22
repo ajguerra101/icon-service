@@ -38,6 +38,11 @@ IS -> IISS: commit or rollback
 alt commit
 IISS -> SDB: update ICX
 IISS -> ID: write claim TX
+IISS -> RC: [IPC] commit_block with success
+RC -> ISDB: write I-Score to snapshot
+else remove
+IISS -> RC: [IPC] commit_block with failure
+RC -> RC: remove I-Score
 end
 
 end

@@ -10,9 +10,10 @@ database "I-Score DB" as ISDB
 
 -> IS: [mq] query
 IS -> IISS: [call] query
-IISS -> RC: [IPC] query
+IISS -> RC: [IPC] QUERY
+RC -> RC: check claim pre_commit data
 RC -> ISDB: read I-Score
-RC -> IISS: [IPC] query response
+RC -> IISS: [IPC] QUERY response
 IISS -> IS: return response
 
 newpage Claim I-Score
@@ -21,29 +22,27 @@ group block invoke
 
 -> IS: [mq] block invoke
 IS -> IISS: [call] with TX
-IISS -> RC: [IPC] claim
+IISS -> RC: [IPC] CLAIM
+RC -> RC: check claim pre_commit data
+alt claimed account
+RC -> RC: set I-Score to zero
+else not claimed account
 RC -> ISDB: read I-Score
-opt old I-Score
-RC -> RC: caculate I-Score
+RC -> RC: write account to claim pre_commit data
 end
-RC -> IISS: claim response
+RC -> IISS: [IPC] CLAIM response
 IISS -> IS: return response
 
 end
 
-group write_precommit_state, remove_precommit_state
+group write_precommit_state
 
--> IS: [mq] write_precommit_state\nor remove_precommit_state
-IS -> IISS: commit or rollback
-alt commit
+-> IS: [mq] write_precommit_state
+IS -> IISS: commit
 IISS -> SDB: update ICX
-IISS -> ID: write claim TX
-IISS -> RC: [IPC] commit_block with success
-RC -> ISDB: write I-Score to snapshot
-else remove
-IISS -> RC: [IPC] commit_block with failure
-RC -> RC: remove I-Score
-end
+IISS -> RC: [IPC] COMMIT_BLOCK
+RC -> ISDB: write claim pre_commit data
+RC -> IISS : [IPC] COMMIT_BLOCK response
 
 end
 

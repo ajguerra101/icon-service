@@ -48,8 +48,8 @@ group I-Score calculation
 RC -> ID: read
 RC -> RC: process IISS data
 RC -> ISDB: calculate & write I-Score
+RC -> ID: delete
 RC -> IISS: [IPC] CALCULATE response
-IISS -> ID: delete
 
 end group
 
